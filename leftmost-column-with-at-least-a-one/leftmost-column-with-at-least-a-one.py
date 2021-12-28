@@ -9,19 +9,15 @@
 class Solution:
     def leftMostColumnWithOne(self, binaryMatrix: 'BinaryMatrix') -> int:
         dimensions = binaryMatrix.dimensions()
-        sol = -1
-        l, r = 0, dimensions[1]-1
-        while(l<=r):
-            mid = (l+r)//2
-            found = False
-            for i in range(dimensions[0]):
-                if binaryMatrix.get(i, mid) == 1:
-                    found = True
-                    break
-            if found:
-                sol = mid
-                r = mid-1
-            else:
-                l=mid+1
-        return sol
+        lowest_col_idx = dimensions[1]
+        for row in range(dimensions[0]):
+            l = 0
+            while(l<lowest_col_idx):
+                mid = (l+lowest_col_idx)//2
+                if binaryMatrix.get(row, mid) == 1:
+                    lowest_col_idx = mid
+                else:
+                    l = mid+1
+        return -1 if lowest_col_idx == dimensions[1] else lowest_col_idx
+        
             
