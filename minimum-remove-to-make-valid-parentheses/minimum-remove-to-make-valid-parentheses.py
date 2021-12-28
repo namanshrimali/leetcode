@@ -10,9 +10,7 @@ class Solution:
                 else:
                     stack.append(i)
         
-        sol = ""
-        for i in range(len(s)):
-            if i in stack:
-                continue
-            sol+=s[i]
-        return sol
+        sol = list(s)
+        for i in stack:
+            sol[i]=""
+        return ''.join(sol)
