@@ -6,33 +6,28 @@
 #         self.right = right
 class Solution:
     def subtreeWithAllDeepest(self, root: TreeNode) -> TreeNode:
-        depth_map = {}
         def dfs(node, parent = None, level=0):
-            nonlocal max_depth
+            nonlocal max_depth, first, last
             if node is None:
                 return
-            depth_map[node] = level
+            node.parent = parent
             if level > max_depth:
                 max_depth = level
-            
+                first = node
+            if level == max_depth:
+                last = node
             dfs(node.left, node, level+1)
             dfs(node.right, node, level+1)
-        def find_subtree(node):
-            if node is None or depth_map[node] == max_depth:
-                return node
-            
-            left = find_subtree(node.left)
-            right = find_subtree(node.right)
-            
-            if left and right:
-                return node
-            if left:
-                return left
-            if right:
-                return right
-            return None
-                
-        max_depth = -float('inf')
+        
+        max_depth, first, last = -float('inf'), None, None
         dfs(root)
-        return find_subtree(root)
+        visited = set()
+        while(first):
+            visited.add(first)
+            first = first.parent
+        while(last):
+            if last in visited:
+                return last
+            last = last.parent
+            
         
