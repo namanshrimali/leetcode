@@ -1,10 +1,10 @@
 class Solution:
     def findRLEArray(self, encoded1: List[List[int]], encoded2: List[List[int]]) -> List[List[int]]:
-        i = 0
         sol = []
-        while(encoded1 and encoded2):
-            encoded1_message, encoded1_freq = encoded1[0]
-            encoded2_message, encoded2_freq = encoded2[0]
+        i,j = 0, 0
+        while(i<len(encoded1) and j<len(encoded2)):
+            encoded1_message, encoded1_freq = encoded1[i]
+            encoded2_message, encoded2_freq = encoded2[j]
             
             message = encoded1_message * encoded2_message
             freq = min(encoded1_freq, encoded2_freq)
@@ -12,14 +12,13 @@ class Solution:
                 sol[-1][1]+=freq
             else:
                 sol.append([message, freq])
+            encoded1[i][1]-=freq
+            encoded2[j][1]-=freq
             
-            if encoded1_freq-freq == 0:
-                encoded1.pop(0)
-            else:
-                encoded1[0][1]-=freq
-            if encoded2_freq-freq == 0:
-                encoded2.pop(0)
-            else:
-                encoded2[0][1]-=freq
+            if encoded1[i][1] == 0:
+                i+=1
+                
+            if encoded2[j][1] == 0:
+                j+=1
         return sol
         
