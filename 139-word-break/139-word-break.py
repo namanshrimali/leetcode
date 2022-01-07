@@ -8,9 +8,9 @@ class Solution:
                 return True
             if start in visited:
                 continue
-            for end in range(start+1, len(s)+1):
-                if s[start:end] in word_set:
-                    queue.append(end)
+            for end in range(start, len(s)):
+                if s[start:end+1] in word_set:
+                    queue.append(end+1)
             visited.add(start)
         return False
             
