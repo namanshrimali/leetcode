@@ -7,11 +7,10 @@ class Solution:
             '9': '6',
             '0': '0'
         }
-        sol_num = []
-        for i in num:
-            if i not in str_pair:
+        first, last = 0, len(num)-1
+        while(first<=last):
+            if num[last] not in str_pair or num[first] != str_pair[num[last]]:
                 return False
-            sol_num.append(str_pair[i])
-        if ''.join(sol_num[::-1]) == num:
-            return True
-        return False
+            first+=1
+            last-=1
+        return True
