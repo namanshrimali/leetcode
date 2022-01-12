@@ -11,7 +11,7 @@ class Solution:
         for i in num:
             if i not in str_pair:
                 return False
-            sol_num.insert(0, str_pair[i])
-        if ''.join(sol_num) == num:
+            sol_num.append(str_pair[i])
+        if ''.join(sol_num[::-1]) == num:
             return True
         return False
