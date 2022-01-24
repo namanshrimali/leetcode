@@ -1,11 +1,12 @@
 class Solution:
-    def findKthPositive(self, arr: List[int], k: int) -> int:
-        counter = 0
-        arr.insert(0, 0)
-        for i in range(1, len(arr)):
-            counter += arr[i]-arr[i-1]-1
-            if counter >=k:
-                return arr[i] - (counter - k) - 1
-        return arr[i]+(k-counter)
+    def findKthPositive(self, arr: List[int], k: int) -> int:        
+        start, end = 0, len(arr)-1
+        while(start <= end):
+            mid = (start+end)//2
             
+            if arr[mid]-mid-1 < k:
+                start= mid+1
+            else:
+                end=mid-1
                 
+        return arr[end]+k - (arr[end]-end-1)
