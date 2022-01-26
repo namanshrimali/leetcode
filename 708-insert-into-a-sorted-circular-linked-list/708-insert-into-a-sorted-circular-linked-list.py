@@ -12,19 +12,22 @@ class Solution:
             head = Node(insertVal)
             head.next = head
             return head
-            
-        prev_ptr, next_ptr = head, head.next
+        curr_node, next_node = head, head.next
         
-        while(next_ptr != head):
-            if prev_ptr.val <= insertVal <= next_ptr.val:
+        while(next_node!=head):
+            # when insertVal is b/w two nodes
+            if next_node.val >= insertVal >= curr_node.val:
                 break
-            if prev_ptr.val > next_ptr.val and insertVal > prev_ptr.val:
+            # when insertVal is highest in the ll
+            elif insertVal > curr_node.val and curr_node.val > next_node.val:
                 break
-            if prev_ptr.val > next_ptr.val and insertVal < next_ptr.val:
+            # when insertVal is smallest in the ll
+            elif insertVal < next_node.val and next_node.val < curr_node.val:
                 break
-            prev_ptr = next_ptr
-            next_ptr = next_ptr.next
+            curr_node = next_node
+            next_node = next_node.next
         new_node = Node(insertVal)
-        prev_ptr.next = new_node
-        new_node.next = next_ptr
+        curr_node.next = new_node
+        new_node.next = next_node
+        
         return head
