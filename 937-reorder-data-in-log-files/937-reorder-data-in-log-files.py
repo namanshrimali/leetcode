@@ -7,5 +7,5 @@ class Solution:
                 digit_log.append(' '.join(log))
             else:
                 letter_log.append(' '.join(log))
-        letter_log.sort(key = lambda letter: (letter.split(' ')[1:], letter.split(' ')[0]))
+        letter_log.sort(key = lambda letter: (letter.split(' ')[1:], letter[:4]))
         return letter_log+digit_log
