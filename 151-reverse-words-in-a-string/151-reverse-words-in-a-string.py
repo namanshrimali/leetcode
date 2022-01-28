@@ -6,6 +6,5 @@ class Solution:
             if word == '':
                 continue
             output.append(word)
-        print(output)
         return ' '.join(output[::-1])
         
