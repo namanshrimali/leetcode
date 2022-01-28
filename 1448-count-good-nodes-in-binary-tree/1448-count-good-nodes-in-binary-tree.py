@@ -6,19 +6,17 @@
 #         self.right = right
 class Solution:
     def goodNodes(self, root: TreeNode) -> int:
-        def dfs(node, parent_list=[]):
+        def dfs(node, max_so_far = float('-inf')):
             nonlocal sol
             if node is None:
                 return
-            parent_list.append(node.val)
-            dfs(node.left, parent_list)
-            dfs(node.right, parent_list)
-            parent_list.pop()
+            if max_so_far <= node.val:
+                sol+=1
+                max_so_far = node.val
             
-            for parent in parent_list:
-                if node.val < parent:
-                    return
-            sol+=1
+            dfs(node.left, max_so_far)
+            dfs(node.right, max_so_far)
+
             
         sol = 0
         dfs(root)
