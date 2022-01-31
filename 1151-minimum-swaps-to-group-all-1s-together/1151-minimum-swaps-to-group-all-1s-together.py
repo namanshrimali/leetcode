@@ -9,10 +9,11 @@ class Solution:
                 zero_count[i+1] = zero_count[i]
             else:
                 zero_count[i+1]= zero_count[i] + 1
-        i = 0
+        left, right = 0, total_ones-1
         sol = float('inf')
-        while i+total_ones-1<L:
-            sol = min(sol, zero_count[i+total_ones] - zero_count[i])
-            i+=1
+        while right<L:
+            sol = min(sol, zero_count[right+1] - zero_count[left])
+            left+=1
+            right+=1
         return sol
         
