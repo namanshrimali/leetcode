@@ -11,7 +11,8 @@ class Solution:
                 if part_remaining == 0:
                     sol.append(''.join(ip_arr))
                 return
-            
+            if not part_remaining <= len(s)-idx <= part_remaining*3:
+                return
             i = idx+1
             segment = s[idx:i]
             while i<=len(s) and valid(segment):
