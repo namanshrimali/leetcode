@@ -1,6 +1,6 @@
 class Solution:
     def minMoves2(self, nums: List[int]) -> int:
-        nums.sort()
+        nums.sort() # can use quick select instead of entire sort
         mid = len(nums)//2
         total_moves = 0
         for num in nums:
