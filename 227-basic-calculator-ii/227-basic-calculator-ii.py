@@ -1,40 +1,39 @@
 class Solution:
     def calculate(self, s: str) -> int:
-        s = s.replace(" ", "")
-        stack = []
-        last_digit_start_idx = -1
-        last_symbol = "+"
-        idx = 0
-        while idx < len(s):
-            char = s[idx]
-            if char in "+-*/":
-                if last_digit_start_idx != -1:
-                    stack.append(int(last_symbol+s[last_digit_start_idx:idx]))
-                if char in "+-":
-                    last_symbol = char
-                else:
-                    last_number = stack.pop()
-                    last_digit_start_idx = idx+1
-                    while(idx+1 < len(s) and s[idx+1].isdigit()):
-                        idx+=1
-                    curr_number = int(s[last_digit_start_idx:idx+1])
-                    if char == '*':
-                        stack.append(last_number*curr_number)
-                    else:
-                        if last_number < 0:
-                            stack.append(-(abs(last_number)//curr_number))
-                        else:
-                            stack.append(last_number//curr_number)
-                last_digit_start_idx = -1
+            
+        stack, last_sign = [], '+'
+        i, L = 0, len(s)
+        
+        def get_number(i, last_sign):
+            num = [last_sign]
+            while i < L and s[i] not in '+-*/':
+                if s[i].isdigit():
+                    num.append(s[i])
+                i+=1
+            return int(''.join(num)), i-1
+        
+        while i<L:
+            if s[i].isdigit():
+                next_num, i = get_number(i, last_sign)
+                stack.append(next_num)
             else:
-                if last_digit_start_idx == -1:
-                    last_digit_start_idx = idx
-                
-            idx+=1
-        if last_digit_start_idx != -1:
-            stack.append(int(last_symbol+s[last_digit_start_idx:]))
-        
+                if s[i] == '-':
+                    last_sign = '-'
+                elif s[i] == '+':
+                    last_sign = '+'
+                elif s[i] == '*':
+                    last_sign = '+'
+                    next_num, i = get_number(i+1, last_sign)
+                    stack[-1]*=next_num
+                elif s[i] == '/':
+                    last_sign = '+'
+                    next_num, i = get_number(i+1, last_sign)
+                    if stack[-1] < 0:
+                        stack[-1] = -(-stack[-1]//next_num)
+                    else:
+                        stack[-1]//=next_num
+            i+=1
         return sum(stack)
-                
-                
-        
+            
+                        
+                    
