@@ -1,8 +1,13 @@
 class Solution:
     def customSortString(self, order: str, s: str) -> str:
         hash_map = {}
-        for i in range(len(order)):
-            hash_map[order[i]] = i+1
-        s = list(s)
-        s.sort(key= lambda a:hash_map.get(a, 27))
-        return ''.join(s)
+        for i in range(len(s)):
+            hash_map[s[i]] = hash_map.get(s[i], 0)+1
+        sol = []
+        for char in order:
+            if char in hash_map:
+                sol.append(char*hash_map[char])
+                del hash_map[char]
+        for remaining in hash_map:
+            sol.append(remaining*hash_map[remaining])
+        return ''.join(sol)
