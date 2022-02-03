@@ -10,19 +10,16 @@ class Node:
 
 class Solution:
     def connect(self, root: 'Optional[Node]') -> 'Optional[Node]':
-        if root is None:
+        if not root:
             return
-        deque = collections.deque([root])
-        while deque:
-            deque_len = len(deque)
-            prev = None
-            for _ in range(deque_len):
-                top_node = deque.popleft()
-                if prev:
-                    prev.next = top_node
-                if top_node.left:
-                    deque.append(top_node.left)
-                if top_node.right:
-                    deque.append(top_node.right)
-                prev = top_node
+        leftmost = root
+        while leftmost.left:
+            curr = leftmost
+            while curr:
+                curr.left.next = curr.right   # connecting sibling
+                if curr.next:
+                    curr.right.next = curr.next.left
+                curr = curr.next
+                
+            leftmost = leftmost.left
         return root
