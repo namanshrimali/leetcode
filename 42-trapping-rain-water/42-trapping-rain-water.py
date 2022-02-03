@@ -1,14 +1,17 @@
 class Solution:
     def trap(self, height: List[int]) -> int:
-        L = len(height)
-        left_max, right_max = [0]*L, [0]*L
-        left_max[0], right_max[L-1] = height[0], height[L-1]
-        for i in range(1, L):
-            left_max[i] = max(left_max[i-1], height[i])
-        for i in range(L-2, -1, -1):
-            right_max[i] = max(height[i], right_max[i+1])
-        sol = 0
-        for i in range(1, L):
-            sol+=min(left_max[i], right_max[i])-height[i]
+        stack = []
+        sol, current, L = 0, 0, len(height)
+        while current < L:
+            while stack and height[current]>height[stack[-1]]:
+                prev_idx = stack.pop()
+                if len(stack)==0:
+                    break
+                second_prev_idx = stack[-1]
+                width = current - second_prev_idx - 1
+                depth = min(height[current], height[second_prev_idx])-height[prev_idx]
+                sol+= width*depth
+            stack.append(current)
+            current+=1
         return sol
         
