@@ -30,17 +30,10 @@ class Solution:
             return parent
             
         
-        if is_leaf(node):
-            parent_right = node.parent.right
-            if node!=parent_right:
-                return node.parent
-            else:
-                return get_next_largest(node)
+        if node.right:
+            return get_leftmost(node.right)
         else:
-            if node.right:
-                return get_leftmost(node.right)
-            else:
-                if node.parent:
-                    return get_next_largest(node)
+            if node.parent:
+                return get_next_largest(node)
         return None
         
