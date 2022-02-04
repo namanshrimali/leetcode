@@ -14,8 +14,6 @@ class Solution:
         # when node is right leaf -> leftmost child of grand parent's right child else None
         # when node is parent with right child -> leftmost of right child
         # when node has no right child -> leftmost child of parent's right node
-        def is_leaf(node):
-            return True if node.left == node.right == None and node.parent != None else False
         def get_leftmost(node):
             if node is None:
                 return
