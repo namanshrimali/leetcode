@@ -23,7 +23,7 @@ class MedianFinder:
         
         if len(self.max_heap) > len(self.min_heap)+1:
             self._max_to_min()
-        if len(self.min_heap) > len(self.max_heap)+1:
+        elif len(self.min_heap) > len(self.max_heap)+1:
             self._min_to_max()
         
 
