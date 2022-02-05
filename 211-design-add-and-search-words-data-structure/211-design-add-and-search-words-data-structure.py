@@ -2,41 +2,29 @@ class WordDictionary:
 
     def __init__(self):
         self.trie = {}
-        
-    def _add_on_level(self, word, level):
-        if word == '':
-            level['#'] = {}
-            return
-        if word[0] not in level:
-            level[word[0]] = {}
 
-        self._add_on_level(word[1:], level[word[0]])
-        
     def addWord(self, word: str) -> None:
-        self._add_on_level(word, self.trie)
-        
-    def _search_on_level(self, word, level):
-        if word == '':
-            if '#' in level:
-                return True
-            else:
-                return False
-        
-        if word[0] == '.':
-            found = False
-            for start_letter in level:
-                found = self._search_on_level(word[1:], level[start_letter])
-                if found:
-                    break
-            return found
-        else:
-            if word[0] not in level:
-                return False
-            return self._search_on_level(word[1:], level[word[0]])
-            
-        
+        trie = self.trie
+        for letter in word:
+            if letter not in trie:
+                trie[letter] = {}
+            trie = trie[letter]
+        trie['$'] = True
+                
     def search(self, word: str) -> bool:
-        return self._search_on_level(word, self.trie)
+        def _search_at_level(word, level):
+            for i, letter in enumerate(word):
+                if letter in level:
+                    level = level[letter]
+                else:
+                    if letter == '.':
+                        for key in level:
+                            if key != '$' and _search_at_level(word[i+1:], level[key]):
+                                return True
+                    return False
+            return '$' in level
+        return _search_at_level(word, self.trie)
+                    
 
 # Your WordDictionary object will be instantiated and called as such:
 # obj = WordDictionary()
