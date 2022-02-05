@@ -6,24 +6,26 @@
 #         self.right = right
 class Solution:
     def str2tree(self, s: str) -> Optional[TreeNode]:
-        def construct_node():
-            nonlocal curr_ptr
-            curr_ptr+=1
-            node, node_val = TreeNode(), []
-            
-            while(curr_ptr < len(s) and s[curr_ptr]!=')'):
-                if s[curr_ptr] == '(':
-                    child = construct_node()
-                    if node.left:
-                        node.right = child
+        def construct_tree():
+            nonlocal idx
+            parent, value = None, []
+            while idx < len(s) and s[idx]!=')':
+                if s[idx]=='(':
+                    idx+=1
+                    child = construct_tree()
+                    if parent.left:
+                        parent.right = child
                     else:
-                        node.left = child
+                        parent.left = child
                 else:
-                    node_val.append(s[curr_ptr])
-                curr_ptr+=1
-            
-            node.val = int(''.join(node_val))
-            return node
-        if s:
-            curr_ptr = -1
-            return construct_node()
+                    value.append(s[idx])
+                if idx+1 == len(s) or  s[idx+1] in '()':
+                    if parent is None:
+                        parent = TreeNode(val=int(''.join(value)))
+                idx+=1
+                
+            return parent
+        idx = 0
+        return construct_tree()
+                
+                    
