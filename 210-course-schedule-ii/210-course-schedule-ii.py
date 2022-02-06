@@ -1,34 +1,21 @@
 class Solution:
-    WHITE = 0
-    GRAY = 1
-    BLACK = 2
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
-        node_ref, colour = {}, {}
-        if numCourses == 1:
-            return [numCourses-1]
-        sol, is_cyclic = [], False
-        # graph data structure. If cycle detected, return empty array
-        
+        child_ref, indegree = {}, {}
         for course, prereq in prerequisites:
-            node_ref[prereq] = node_ref.get(prereq, [])
-            node_ref[prereq].append(course)
+            child_ref[prereq] = child_ref.get(prereq, [])
+            child_ref[prereq].append(course)
+            indegree[course] = indegree.get(course, 0)+1
+        queue = collections.deque([k for k in range(numCourses) if k not in indegree])
+        sol = []
         
-        def dfs(node):
-            nonlocal is_cyclic
-            if is_cyclic:
-                return
-            colour[node] = Solution.GRAY
+        while queue:
+            vertex = queue.popleft()
+            sol.append(vertex)
+            if vertex in child_ref:
+                for child in child_ref[vertex]:
+                    indegree[child]-=1
+                
+                    if indegree[child]==0:
+                        queue.append(child)
+        return sol if len(sol) == numCourses else []
             
-            if node in node_ref:
-                for child in node_ref[node]:
-                    if child in colour and colour[child]==Solution.GRAY:
-                        is_cyclic = True
-                        return
-                    elif child not in colour or colour[child]==Solution.WHITE:
-                        dfs(child)
-            colour[node] = Solution.BLACK
-            sol.append(node)
-        for vertex in range(numCourses):
-            if vertex not in colour or colour[vertex] == Solution.WHITE:
-                dfs(vertex)
-        return [] if is_cyclic else sol[::-1] 
