@@ -7,14 +7,15 @@ class Solution:
         
         stack = []
         for asteroid in asteroids:
-            if asteroid < 0:
-                # when big negative asteroid is coming
-                while stack and stack[-1] > 0 and abs(stack[-1]) < abs(asteroid):
+            # when big negative asteroid is coming
+            while stack and asteroid < 0 < stack[-1]:
+                if -asteroid > stack[-1]:
                     stack.pop()
-                if stack and stack[-1]>0:
-                    if stack[-1] == -asteroid:
-                        stack.pop()
                     continue
-            stack.append(asteroid)
+                elif asteroid == -stack[-1]:
+                    stack.pop()
+                break
+            else:
+                stack.append(asteroid)
         return stack
         
