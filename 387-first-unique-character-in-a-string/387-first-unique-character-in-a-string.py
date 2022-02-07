@@ -6,4 +6,5 @@ class Solution:
         for idx, letter in enumerate(s):
             if char_arr[ord(letter)-ord('a')]==1:
                 return idx
-        return -1        
+        return -1
+    
