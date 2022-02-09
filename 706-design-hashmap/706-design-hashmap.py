@@ -28,7 +28,7 @@ class Bucket():
 class MyHashMap:
 
     def __init__(self):
-        self.map_size = 29 # it's better to take prime numbers because it results in less collision.
+        self.map_size = 199 # it's better to take prime numbers because it results in less collision.
         self.map = [Bucket() for i in range(self.map_size)]
 
     def put(self, key: int, value: int) -> None:
