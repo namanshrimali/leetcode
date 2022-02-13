@@ -13,17 +13,14 @@ class Solution:
         while deque:
             node, level = deque.popleft()
             if level in level_dict:
-                level_dict[level].append(node)
+                level_dict[level].append(node.val)
             else:
-                level_dict[level] = [node]
+                level_dict[level] = [node.val]
             if node.left:
                 deque.append((node.left, level-1))
             if node.right:
                 deque.append((node.right, level+1))
         sol = []
         for level in sorted(level_dict):
-            level_list = []
-            for node in (level_dict[level]):
-                level_list.append(node.val)
-            sol.append(level_list)
+            sol.append(level_dict[level])
         return sol
