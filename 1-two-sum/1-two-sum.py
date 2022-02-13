@@ -7,4 +7,3 @@ class Solution:
                 return [hash_map[second],idx]
             else:
                 hash_map[nums[idx]] = idx
-        
