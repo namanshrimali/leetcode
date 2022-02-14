@@ -15,7 +15,7 @@ class Solution:
             diameter = max(diameter, left_height+right_height)
             
             return max(left_height, right_height)+1
-            
         diameter = 0
         dfs(root)
         return diameter
+        
