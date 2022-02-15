@@ -4,15 +4,13 @@ class Solution:
         # if number is not highest, swap it with highest number on the right
         num = list(str(num))
         L = len(num)
-        max_arr = [0] * L
-        max_arr[L-1] = L-1
+        left, right = 0, 0
+        right_max_idx = L-1
         for i in range(L-2, -1, -1):
-            if num[i] > num[max_arr[i+1]]:
-                max_arr[i] = i
-            else:
-                max_arr[i] = max_arr[i+1]
-        for i in range(len(num)):
-            if num[i] < num[max_arr[i]]:
-                num[i], num[max_arr[i]]  = num[max_arr[i]], num[i]
-                break
+            if num[i] > num[right_max_idx]:
+                right_max_idx = i
+            elif num[i] < num[right_max_idx]:
+                left = i
+                right = right_max_idx
+        num[left], num[right] = num[right], num[left]    
         return ''.join(num)
