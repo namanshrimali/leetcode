@@ -1,18 +1,19 @@
 class Solution:
     def exclusiveTime(self, n: int, logs: List[str]) -> List[int]:
+        last_start, last_func = 0, None
         sol = [0]*n
-        stack, prev_time = [], 0
+        stack = []
         for log in logs:
-            func, process, time = log.split(":")
+            func, type_, time = log.split(":")
             func, time = int(func), int(time)
-            
-            if process == 'start':
+            if type_ == 'start':
                 if stack:
-                    sol[stack[-1]]+=time-prev_time
+                    sol[stack[-1]] += time-last_start
                 stack.append(func)
-                prev_time = time
-                    
+                last_start = time
+                
             else:
-                sol[stack.pop()]+= time-prev_time+1
-                prev_time = time+1
+                sol[stack.pop()]+= time - last_start+1
+                last_start = time + 1
         return sol
+        
