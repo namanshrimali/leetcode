@@ -9,4 +9,4 @@ class Solution:
                 if s_dict[letter] == 0:
                     del s_dict[letter]
                 
-        return sum([s_dict[x] for x in s_dict])
+        return sum(s_dict.values())
