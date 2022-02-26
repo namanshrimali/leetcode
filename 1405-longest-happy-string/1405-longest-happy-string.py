@@ -1,30 +1,28 @@
 class Solution:
     def longestDiverseString(self, a: int, b: int, c: int) -> str:
         heap = []
-        if a>0:
+        if a:
             heapq.heappush(heap, (-a, 'a'))
-        if b>0:
+        if b:
             heapq.heappush(heap, (-b, 'b'))
-        if c>0:
+        if c:
             heapq.heappush(heap, (-c, 'c'))
         sol = []
         while heap:
-            max_ele, max_char = heapq.heappop(heap)
-            if len(sol)>1 and sol[-2] == sol[-1] == max_char:
-                if not heap:
+            top_freq, top_letter = heapq.heappop(heap)
+            if len(sol) >=2 and sol[-2]==sol[-1]==top_letter:
+                if len(heap) == 0:
                     break
-                else:
-                    second_max_ele, second_max_char = heapq.heappop(heap)
-                    sol.append(second_max_char)
-                    second_max_ele += 1
-                    
-                    if second_max_ele != 0:
-                        heapq.heappush(heap, (second_max_ele, second_max_char))
-                    heapq.heappush(heap, (max_ele, max_char))
+                second_freq, second_letter = heapq.heappop(heap)
+                sol.append(second_letter)
+                second_freq += 1
+                if second_freq:
+                    heapq.heappush(heap, (second_freq, second_letter))
             else:
-                sol.append(max_char)
-                max_ele += 1
-
-                if max_ele != 0:
-                    heapq.heappush(heap, (max_ele, max_char))
+                sol.append(top_letter)
+                top_freq += 1
+            if top_freq:
+                heapq.heappush(heap, (top_freq, top_letter))
+        
         return ''.join(sol)
+        
