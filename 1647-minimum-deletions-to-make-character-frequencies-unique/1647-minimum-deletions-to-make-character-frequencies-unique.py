@@ -1,17 +1,24 @@
 class Solution:
     def minDeletions(self, s: str) -> int:
-        hash_map = {}
+        letter_count = [0]*26
+        
+        def letter_index(letter):
+            return ord(letter)-ord('a')
+        
         for letter in s:
-            hash_map[letter] = hash_map.get(letter, 0) + 1
-        sol, found_freq = 0, set()
-        heap = [(hash_map[key]) for key in hash_map]
-        # heapq.heapify(heap)
-        for freq in heap:
-            if freq in found_freq:
-                exceed = 0
-                while freq >0 and freq in found_freq:
-                    freq-=1
-                    exceed+=1
-                sol += exceed
-            found_freq.add(freq)
-        return sol
+            letter_count[letter_index(letter)]+=1
+        
+        letter_count.sort(reverse = True)
+        
+        answer = 0
+        print(letter_count)
+        seen = set()
+        for i in range(len(letter_count)):
+            if letter_count[i] == 0:
+                break
+            while letter_count[i] in seen and letter_count[i] != 0:
+                letter_count[i]-=1
+                answer+=1
+            seen.add(letter_count[i])
+        return answer
+            
