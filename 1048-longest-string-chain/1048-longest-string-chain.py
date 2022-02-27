@@ -1,44 +1,42 @@
 class Solution:
     def longestStrChain(self, words: List[str]) -> int:
-        connections_dict = {}
         words.sort(key=len)
         
-        def is_connected(word1, word2):
-            L1, L2 = len(word1), len(word2)
-            if abs(L1-L2) != 1:
+        def is_pred(pred, curr):
+            if len(curr) - len(pred) != 1:
                 return False
-            if L1>L2:
-                for i in range(L1):
-                    if word1[0:i]+word1[i+1:L1] == word2:
-                        return True
-            else:
-                for i in range(L2):
-                    if word2[0:i]+word2[i+1:L2] == word1:
-                        return True
-            return False
+            remaining_violations = 1
+            i, j = 0, 0
+            while i < len(pred) and j < len(curr):
+                if pred[i] != curr[j]:
+                    if remaining_violations == 0:
+                        return False
+                    remaining_violations -= 1
+                    i-=1
+                i+=1
+                j+=1
+            return True
         
-        for word in words:
-            if word in connections_dict:
-                continue
-            connections_dict[word] = [[], None]
-            for prev_word in connections_dict:
-                if is_connected(prev_word, word):
-                    connections_dict[word][0].append(prev_word)
-        sol = 0
-        
-        def dfs(letter):
-            nonlocal sol
-            if connections_dict[letter][1] !=  None:
-                return connections_dict[letter][1]
-            total_connected = 1
-            for connected in connections_dict[letter][0]:
-                total_connected = max(total_connected, 1+dfs(connected))
-            sol = max(sol, total_connected)
-            connections_dict[letter][1] = total_connected
-            return total_connected
-        
-        for word in words:
-            dfs(word)
-        return sol
-        
+        chain_dict = {}
+        for i in range(len(words)):
+            j = i-1
+            while j > -1:
+                if is_pred(words[j], words[i]):
+                    chain_dict[words[j]][0].append(words[i])
+                j-=1
+                
+            chain_dict[words[i]] = [[], None]
+        max_len = 0
+        def dfs(word):
+            if chain_dict[word][1] != None:
+                return chain_dict[word][1]
+            
+            max_child_len = 0
+            for succ in chain_dict[word][0]:
+                max_child_len = max(max_child_len, dfs(succ))
+            chain_dict[word][1] = max_child_len+1
+            return chain_dict[word][1]
+        for word in chain_dict:
+            max_len = max(max_len, dfs(word))
+        return max_len
         
