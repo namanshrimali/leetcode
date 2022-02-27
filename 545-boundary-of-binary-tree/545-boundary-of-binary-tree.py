@@ -6,37 +6,47 @@
 #         self.right = right
 class Solution:
     def boundaryOfBinaryTree(self, root: Optional[TreeNode]) -> List[int]:
-        left, leaf, right = [], [], []
-        def pre_dfs(node, flag):
+        if root is None:
+            return []
+        left_boundry, right_boundry, leaf = [root.val], [], []
+        
+        def is_leaf(node):
+            return node and node.left == None and node.right == None and node != root
+        
+        def fill_left_boundry(node):
+            while node:
+                if is_leaf(node):
+                    break
+                left_boundry.append(node.val)
+                if node.left:
+                    node = node.left
+                else:
+                    node = node.right
+        
+        def fill_right_boundry(node):
+            while node:
+                if is_leaf(node):
+                    break
+                right_boundry.append(node.val)
+                if node.right:
+                    node = node.right
+                else:
+                    node = node.left
+        
+        def fill_leaf(node):
             if node is None:
                 return
-            if flag == 'root':
-                left.append(node.val)
-                pre_dfs(node.left, 'left')
-                pre_dfs(node.right, 'right')
+            if is_leaf(node):
+                leaf.append(node.val)
+            fill_leaf(node.left)
+            fill_leaf(node.right)
                 
-            elif flag == 'left':
-                left.append(node.val)
-                if node.left:
-                    pre_dfs(node.left, 'left')
-                    pre_dfs(node.right, 'mid')
-                else:
-                    pre_dfs(node.right, 'left')
-            
-            elif flag == 'right':
-                right.append(node.val)
-                if node.right:
-                    pre_dfs(node.left, 'mid')
-                    pre_dfs(node.right, 'right')
-                else:
-                    pre_dfs(node.left, 'right')
-            else: # flag == 'mid'
-                if node.left == None and node.right == None:
-                    leaf.append(node.val)
-                else:
-                    pre_dfs(node.left, 'mid')
-                    pre_dfs(node.right, 'mid')
-                    
-        pre_dfs(root, 'root')
-        return left + leaf + right[::-1]
-                
+        
+        if root.left:
+            fill_left_boundry(root.left)
+        if root.right:
+            fill_right_boundry(root.right)
+        fill_leaf(root)
+        return left_boundry + leaf + right_boundry[::-1]
+        
+        
