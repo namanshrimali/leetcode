@@ -1,7 +1,13 @@
 class Solution:
     def sumZero(self, n: int) -> List[int]:
-        half_len = n//2
-        sol = [0]*n
-        for i in range(n):
-            sol[i] = 2*i-n+1
-        return sol
+        answer = []
+        curr_num = 1
+        while n > 1:
+            answer.append(curr_num)
+            answer.append(-curr_num)
+            curr_num+=1
+            n-=2
+        if n == 1:
+            answer.append(0)
+        return answer
+        
