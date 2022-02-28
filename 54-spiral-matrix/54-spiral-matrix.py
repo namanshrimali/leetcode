@@ -1,36 +1,20 @@
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
-        sol = []
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         m, n = len(matrix), len(matrix[0])
-        total_elements, boundry = m*n, 0
-        direction, i, j = 'R', 0, 0
-        while total_elements:
-            sol.append(matrix[i][j])
-            if direction == 'R':
-                if j+1 < n-boundry:
-                    j+=1
-                else:
-                    direction = 'D'
-                    i+=1
-            elif direction == 'L':
-                if j-1 >= boundry:
-                    j-=1
-                else:
-                    direction = 'U'
-                    i-=1
-            elif direction == 'D':
-                if i+1 < m-boundry:
-                    i+=1
-                else:
-                    direction = 'L'
-                    j-=1
-            else: # direction == 'U'
-                if i-1 > boundry:
-                    i-=1
-                else:
-                    direction = 'R'
-                    j+=1
-                    boundry+=1
-            total_elements-=1
-        return sol
+        remaining = m*n - 1
+        curr_x, curr_y = 0, 0
+        answer = [matrix[0][0]]
+        matrix[0][0] = -inf
+
+        while remaining:
+            for next_x, next_y in directions:
+                while -1 < curr_x + next_x < m and -1 < curr_y + next_y < n and matrix[curr_x+next_x][curr_y + next_y] != -inf:
+                    curr_x += next_x
+                    curr_y += next_y
+                    answer.append(matrix[curr_x][curr_y])
+                    matrix[curr_x][curr_y] = -inf
+                    remaining-=1
+                    
+        return answer
         
