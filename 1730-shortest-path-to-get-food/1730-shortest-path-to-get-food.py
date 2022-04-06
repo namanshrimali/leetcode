@@ -1,34 +1,31 @@
 class Solution:
     def getFood(self, grid: List[List[str]]) -> int:
-        m, n = len(grid), len(grid[0])
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-        def bfs(row, col):
-            food_found = False
-            deque = collections.deque([(row, col)])
-            path_len = 0
-            while deque and not food_found:
-                deque_len = len(deque)
-                for _ in range(deque_len):
-                    curr_row, curr_col = deque.popleft()
-                    for x, y in directions:
-                        next_row, next_col = curr_row+x, curr_col+y
+        m, n = len(grid), len(grid[0])
+        
+        def bfs(i, j):
+            deque = collections.deque([(i, j)])
+            grid[i][j] = "0"
+            while deque:
+                curr_x, curr_y = deque.popleft()
+                for x, y in directions:
+                    next_x, next_y = curr_x+x, curr_y+y
+                    if -1<next_x<m and -1<next_y<n and grid[next_x][next_y] != "X" and not grid[next_x][next_y].isdigit():
+                        next_dist = str(int(grid[curr_x][curr_y])+1)
+                        if grid[next_x][next_y] == '#':
+                            return int(next_dist)
+                        grid[next_x][next_y] = next_dist
+                        deque.append((next_x, next_y))
                         
-                        if not (-1 < next_row < m and -1 < next_col < n):
-                            continue
-                        elif grid[next_row][next_col] == 'X':
-                            continue  
-                        elif grid[next_row][next_col] == '#':
-                            food_found = True
-                            break
-                        else:
-                            grid[next_row][next_col] = 'X'
-                        deque.append((next_row, next_col))
-                path_len +=1
-            return path_len if food_found else -1
+            return -1
+                        
+        min_distance = inf
         
-        for row in range(m):
-            for col in range(n):
-                if grid[row][col]=='*':
-                    grid[row][col] = 'X'
-                    return bfs(row, col)
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == '*':
+                    distance = bfs(i, j)
+                    if distance != -1:
+                        min_distance = min(min_distance, distance)
         
+        return -1 if min_distance==inf else min_distance
