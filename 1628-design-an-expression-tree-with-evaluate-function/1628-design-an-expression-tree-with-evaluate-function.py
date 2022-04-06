@@ -11,33 +11,35 @@ class Node(ABC):
     def evaluate(self) -> int:
         pass
 
-class BinaryNode(Node):
-    def __init__(self, left=None, right=None, val = None):
-        self.val = val
-        self.right, self.left = right, left
-    def evaluate(self) -> int:
-        pass
-
-class Plus(BinaryNode):
-    def evaluate(self) -> int:
+class AdditionNode(Node):
+    def __init__(self, left, right):
+        self.left, self.right = left, right
+    def evaluate(self):
         return self.left.evaluate() + self.right.evaluate()
     
-class Minus(BinaryNode):
-    def evaluate(self) -> int:
+class SubtractionNode(Node):
+    def __init__(self, left, right):
+        self.left, self.right = left, right
+    def evaluate(self):
         return self.left.evaluate() - self.right.evaluate()
-
-class Divide(BinaryNode):
-    def evaluate(self) -> int:
-        return self.left.evaluate() // self.right.evaluate()
-
-class Multiply(BinaryNode):
-    def evaluate(self) -> int:
+    
+class MultiplicationNode(Node):
+    def __init__(self, left, right):
+        self.left, self.right = left, right
+    def evaluate(self):
         return self.left.evaluate() * self.right.evaluate()
-
-class Num(BinaryNode):
-    def evaluate(self) -> int:
-        return self.val 
-
+    
+class DivisionNode(Node):
+    def __init__(self, left, right):
+        self.left, self.right = left, right
+    def evaluate(self):
+        return self.left.evaluate() // self.right.evaluate()
+    
+class ValueNode(Node):
+    def __init__(self, value):
+        self.value = int(value)
+    def evaluate(self):
+        return self.value
 """    
 This is the TreeBuilder class.
 You can treat it as the driver code that takes the postinfix input
@@ -45,18 +47,27 @@ and returns the expression tree represnting it as a Node.
 """
 
 class TreeBuilder(object):
-    operators = {'+': Plus, '-': Minus, '*': Multiply, '/': Divide}
     def buildTree(self, postfix: List[str]) -> 'Node':
-        stack = []
-        for ele in postfix:
-            if ele in self.operators:
-                right, left = stack.pop(), stack.pop()
-                stack.append(self.operators[ele](left, right, None))
+        expression_stack = []
+        for char in postfix:
+            if char.isdigit():
+                expression_stack.append(ValueNode(char))
             else:
-                stack.append(Num(None, None, int(ele)))
-        return stack[-1]
-                
-                 
+                second = expression_stack.pop()
+                first = expression_stack.pop()
+                if char == '+':
+                    new_node = AdditionNode(first, second)
+                elif char == '-':
+                    new_node = SubtractionNode(first, second)
+                elif char == '/':
+                    new_node = DivisionNode(first, second)
+                else:
+                    new_node = MultiplicationNode(first, second)
+                expression_stack.append(new_node)
+        
+        return expression_stack[0]
+
+		
 """
 Your TreeBuilder object will be instantiated and called as such:
 obj = TreeBuilder();
