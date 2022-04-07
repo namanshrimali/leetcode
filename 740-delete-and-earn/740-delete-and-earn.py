@@ -1,19 +1,20 @@
 class Solution:
     def deleteAndEarn(self, nums: List[int]) -> int:
-        counter = collections.defaultdict(int)
-        
+        points_map = {}
         for num in nums:
-            counter[num] += 1
+            points_map[num] = points_map.get(num, 0) + num
+        sorted_keys = sorted(points_map.keys())
         
-        elements = sorted(counter.keys())
-        prev_max, second_prev_max = elements[0] * counter[elements[0]], 0
+        last_key = sorted_keys[0]
         
-        for i in range(1, len(elements)):
-            num = elements[i]
-            if num == elements[i-1] + 1:
-                
-                second_prev_max, prev_max = prev_max, max(prev_max, second_prev_max + counter[num]*num)
+        prev_max, second_prev_max = points_map[last_key], 0
+        
+        for curr_key in sorted_keys[1:]:
+            if curr_key == last_key+1:
+                curr_max = max(second_prev_max+ points_map[curr_key], prev_max)
             else:
-                second_prev_max, prev_max = prev_max, prev_max + counter[num]*num
-        
+                curr_max = prev_max + points_map[curr_key]
+            last_key = curr_key
+            second_prev_max = prev_max
+            prev_max = curr_max
         return prev_max
