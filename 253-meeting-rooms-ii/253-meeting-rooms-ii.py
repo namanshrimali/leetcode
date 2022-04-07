@@ -5,8 +5,8 @@ class Solution:
         
         for start, end in intervals:
             
-            if heap and heap[0][0] <= start:
+            if heap and heap[0] <= start:
                 heapq.heappop(heap)
-            heapq.heappush(heap, [end, start])
+            heapq.heappush(heap, end)
             
         return len(heap)
