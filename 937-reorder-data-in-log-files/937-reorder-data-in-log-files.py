@@ -1,38 +1,17 @@
 class Solution:
-    def reorderLogFiles(self, logs: List[str]) -> List[str]:    
-        
-        def compare_fn(item1, item2):
-            item1 = item1.split()
-            item2 = item2.split()
-            
-            if len(item1) == len(item2) == 1:
-                if item1 < item2:
-                    return -1
-                elif item1 > item2:
-                    return 1
-                else:
-                    return 0
-            
-            if item1[1:] == item2[1:]:
-                return compare_fn(item1[0], item2[0])
-            else:
-                if item1[1:] > item2[1:]:
-                    return 1
-                elif item1[1:] < item2[1:]:
-                    return -1
-                else:
-                    return 0
-            
-        digit_logs = []
-        letter_logs = []
+    def reorderLogFiles(self, logs: List[str]) -> List[str]:
+        letter_logs, digit_logs = [], []
         
         for log in logs:
-            log_arr = log.split()
-            if log_arr[1].isdigit():
+            split_log = log.split(" ")
+            if split_log[1].isdigit():
                 digit_logs.append(log)
             else:
-                letter_logs.append(log)
-                
-        letter_logs.sort(key = functools.cmp_to_key(compare_fn))
-        return letter_logs+digit_logs
+                letter_logs.append(split_log)
+        letter_logs.sort(key=lambda a: [a[1:], a[0]])
         
+        for i in range(len(letter_logs)):
+            letter_logs[i] = ' '.join(letter_logs[i])
+        
+        return letter_logs+digit_logs
+            
