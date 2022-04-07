@@ -1,16 +1,18 @@
 class Solution:
     def kthFactor(self, n: int, k: int) -> int:
-        heap = []
-        stop = int(n**0.5)
+        divisors = []
+        sqrt_n = int(n**0.5)
+        for i in range(1, sqrt_n+1):
+            if n%i == 0:
+                divisors.append(i)
+                k-=1
+                if k == 0:
+                    return i
         
-        def heappush_k(num):
-            heapq.heappush(heap, -num)
-            if len(heap) > k:
-                heapq.heappop(heap)
-                
-        for num in range(1, stop+1):
-            if n%num==0:
-                heappush_k(num)
-                if n//num != num:
-                    heappush_k(n//num)
-        return -heapq.heappop(heap) if len(heap) == k else -1
+        if (sqrt_n*sqrt_n == n):
+            k+=1
+            
+        if k > len(divisors):
+            return -1
+        else:
+            return n//divisors[len(divisors)-k]
