@@ -1,31 +1,27 @@
 class Solution:
     def getFood(self, grid: List[List[str]]) -> int:
-        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        directions = [(-1, 0), (1, 0), (0, 1), (0, -1)]
         m, n = len(grid), len(grid[0])
         
-        def bfs(i, j):
-            deque = collections.deque([(i, j)])
-            grid[i][j] = "0"
+        def bfs(start_x, start_y):
+            grid[start_x][start_y] = 0
+            deque = collections.deque([(start_x, start_y)])
+            
             while deque:
-                curr_x, curr_y = deque.popleft()
-                for x, y in directions:
-                    next_x, next_y = curr_x+x, curr_y+y
-                    if -1<next_x<m and -1<next_y<n and grid[next_x][next_y] != "X" and not grid[next_x][next_y].isdigit():
-                        next_dist = str(int(grid[curr_x][curr_y])+1)
-                        if grid[next_x][next_y] == '#':
-                            return int(next_dist)
-                        grid[next_x][next_y] = next_dist
-                        deque.append((next_x, next_y))
-                        
+                que_len = len(deque)
+                for _ in range(que_len):
+                    curr_x, curr_y = deque.popleft()
+                    for x, y in directions:
+                        new_x, new_y = curr_x + x, curr_y + y
+                        if -1 < new_x < m and -1 < new_y < n:
+                            if grid[new_x][new_y] == '#':
+                                return grid[curr_x][curr_y]+1
+                            if grid[new_x][new_y] == 'O':
+                                grid[new_x][new_y] = grid[curr_x][curr_y]+1
+                                deque.append((new_x, new_y))
             return -1
-                        
-        min_distance = inf
         
         for i in range(m):
             for j in range(n):
                 if grid[i][j] == '*':
-                    distance = bfs(i, j)
-                    if distance != -1:
-                        min_distance = min(min_distance, distance)
-        
-        return -1 if min_distance==inf else min_distance
+                    return bfs(i, j)
