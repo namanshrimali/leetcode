@@ -1,27 +1,27 @@
 class Solution:
     def reorganizeString(self, s: str) -> str:
         heap = []
-        counter_hash_map = {}
-        for letter in s:
-            counter_hash_map[letter] = counter_hash_map.get(letter, 0)+1
-        for key in counter_hash_map:
-            heapq.heappush(heap, [-counter_hash_map[key], key])
-        sol = []
+        counter_map = {}
+        for char in s:
+            counter_map[char] = counter_map.get(char, 0) + 1
+        for char in counter_map:
+            heapq.heappush(heap, (-counter_map[char], char))
+        answer = []
         while heap:
-            freq, top_letter = heapq.heappop(heap)
-            if sol and sol[-1] == top_letter:
-                if heap:
-                    second_freq, second_top = heapq.heappop(heap)
-                    second_freq+=1
-                    sol.append(second_top)
-                    if second_freq!=0:
-                        heapq.heappush(heap, [second_freq, second_top])
-                else:
-                    return ''
+            freq, top_ele = heapq.heappop(heap)
+            if heap:
+                second_freq, second_ele = heapq.heappop(heap)
+                answer.append(top_ele)
+                answer.append(second_ele)
+                freq += 1
+                second_freq += 1
+                if second_freq:
+                    heapq.heappush(heap, (second_freq, second_ele))
+                if freq:
+                    heapq.heappush(heap, (freq, top_ele))
             else:
-                freq+=1
-                sol.append(top_letter)
-            if freq != 0:
-                heapq.heappush(heap, [freq, top_letter])
-        return ''.join(sol)
-        
+                if freq < -1:
+                    return ""
+                else:
+                    answer.append(top_ele)
+        return ''.join(answer)
