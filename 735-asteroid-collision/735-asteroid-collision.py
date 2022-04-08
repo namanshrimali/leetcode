@@ -1,21 +1,21 @@
 class Solution:
     def asteroidCollision(self, asteroids: List[int]) -> List[int]:
-        # + -> + : None
-        # + -> - : Collision
-        # - -> + : None
-        # - -> - : None
-        
         stack = []
-        for asteroid in asteroids:
-            # when big negative asteroid is coming
-            while stack and asteroid < 0 < stack[-1]:
-                if -asteroid > stack[-1]:
-                    stack.pop()
-                    continue
-                elif asteroid == -stack[-1]:
-                    stack.pop()
-                break
+        for a in asteroids:
+            if a > 0:
+                stack.append(a)
             else:
-                stack.append(asteroid)
+                destroy_self = False
+                while stack and stack[-1] > 0:
+                    top_a = stack[-1]
+                    if top_a >= -a:
+                        destroy_self = True
+                        if top_a == -a:
+                            stack.pop()
+                        break
+                    else:
+                        stack.pop()
+                    
+                if not destroy_self:
+                    stack.append(a)
         return stack
-        
