@@ -10,15 +10,18 @@ class Solution:
             nonlocal max_avg
             if node is None:
                 return 0, 0
-            left_sum, left_subtree_len = dfs(node.left)
-            right_sum, right_subtree_len = dfs(node.right)
-            total_subtree_len = 1 + left_subtree_len + right_subtree_len
-            total_subtree_sum = left_sum + right_sum + node.val
+            total_subtree_size, subtree_total = 0, 0
             
-            max_avg = max(max_avg, total_subtree_sum/total_subtree_len)
+            left_subtree_size, left_total = dfs(node.left)
+            right_subtree_size, right_total = dfs(node.right)
             
-            return total_subtree_sum, total_subtree_len
-        
-        max_avg = -inf
+            total_subtree_size = left_subtree_size + right_subtree_size + 1
+            total_subtree_val = left_total + right_total + node.val
+            
+            max_avg = max(max_avg, total_subtree_val/total_subtree_size)
+            
+            return total_subtree_size, total_subtree_val
+        max_avg = 0
         dfs(root)
         return max_avg
+        
