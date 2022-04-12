@@ -1,20 +1,17 @@
 class Solution:
     def maximumUnits(self, boxTypes: List[List[int]], truckSize: int) -> int:
-        heap = []
-        for qnty, units in boxTypes:
-            heapq.heappush(heap, [-units, qnty])
+        max_heap = []
+        for qnty, units_per_box in boxTypes:
+            heapq.heappush(max_heap, [-units_per_box, qnty])
+        max_units = 0
         
-        total_units = 0
-        
-        while truckSize and heap:
-            units_per_box, qnty = -heap[0][0], heap[0][1]
-            
-            while qnty and truckSize:
-                total_units += units_per_box
-                truckSize -=1
-                qnty-=1
-                
-            if qnty == 0:
-                heapq.heappop(heap)
-        
-        return total_units
+        while max_heap and truckSize:
+            units_per_box, qnty = heapq.heappop(max_heap)
+            req_qnty = min(truckSize, qnty)
+            qnty -= req_qnty
+            truckSize -= req_qnty
+            max_units += req_qnty * -units_per_box
+            if qnty != 0:
+                heapq.heappush(max_heap, [units_per_box, qnty])
+        return max_units
+                   
