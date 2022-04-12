@@ -7,29 +7,30 @@
 
 class Solution:
     def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
-        def dfs(node, parent=None):
+        def map_parent(node, parent=None):
             if node is None:
                 return
             node.parent = parent
-            dfs(node.left, node)
-            dfs(node.right, node)
-        dfs(root)
+            map_parent(node.left, node)
+            map_parent(node.right, node)
         
-        visited = set([target])
-        queue = collections.deque([target])
-        curr_level = 0
-        while queue:
-            curr_queue_len = len(queue)
-            if curr_level == k:
-                return [node.val for node in queue]
-            while curr_queue_len:
-                top_ele = queue.popleft()
-                visited.add(top_ele)
-                
-                for connected_ele in [top_ele.parent, top_ele.right, top_ele.left]:
-                    if connected_ele and connected_ele not in visited:
-                        queue.append(connected_ele)
-                curr_queue_len-=1
-            curr_level+=1
-        return []
+        def find_k_dist_nodes(node, distance = 0):
+            nonlocal k_distance_nodes, visited
             
+            if node is None or node in visited:
+                return
+            visited.add(node)
+            if distance == k:
+                k_distance_nodes.append(node.val)
+                return
+            find_k_dist_nodes(node.left, distance+1)
+            find_k_dist_nodes(node.right, distance+1)
+            find_k_dist_nodes(node.parent, distance+1)
+            
+            
+            
+        map_parent(root)
+        k_distance_nodes, visited = [], set()
+        find_k_dist_nodes(target)
+        return k_distance_nodes
+        
