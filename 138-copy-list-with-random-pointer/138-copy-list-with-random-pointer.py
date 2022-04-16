@@ -10,21 +10,25 @@ class Node:
 class Solution:
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
         if head is None:
-            return
-        list_hash_map = {}
-        list_ptr = head
+            return None
+        copy_nodes = {}
+        curr = head
         
-        while(list_ptr):
-            list_hash_map[list_ptr] = Node(x = list_ptr.val)
-            list_ptr = list_ptr.next
+        while curr:
+            if curr not in copy_nodes:
+                copy_nodes[curr] = Node(curr.val)
+            
+            if curr.random: 
+                if curr.random not in copy_nodes:
+                    copy_nodes[curr.random] = Node(curr.random.val)
+                copy_nodes[curr].random = copy_nodes[curr.random]
+            
+            if curr.next:
+                if curr.next not in copy_nodes:
+                    copy_nodes[curr.next] = Node(curr.next.val)
+                copy_nodes[curr].next = copy_nodes[curr.next]
+            
+            curr = curr.next
+            
+        return copy_nodes[head]           
         
-        new_head = list_hash_map.get(head)
-        list_ptr = head
-        
-        while(list_ptr):
-            new_node = list_hash_map.get(list_ptr)
-            new_node.next = list_hash_map.get(list_ptr.next, None)
-            new_node.random = list_hash_map.get(list_ptr.random, None)
-            list_ptr = list_ptr.next
-        
-        return new_head
