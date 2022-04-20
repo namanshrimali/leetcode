@@ -7,5 +7,3 @@ class Solution:
             if char_count[char] == 1:
                 return i
         return -1
-            
-        
