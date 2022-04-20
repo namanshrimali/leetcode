@@ -12,16 +12,11 @@ class Solution:
         while l2:
             num2 = num2 * 10 + l2.val
             l2 = l2.next
-        num = str(num1 + num2)
-        
-        head = ListNode()
-        curr_node = head
-        curr_idx = 0
-        while curr_idx < len(num):
-            curr_node.val = int(num[curr_idx])
-            if curr_idx != len(num)-1:
-                curr_node.next = ListNode()
-            curr_node = curr_node.next
-            curr_idx +=1
-        return head
-        
+        num = num1 + num2
+        prev = None
+        while num:
+            rem = num % 10
+            curr = ListNode(rem, prev)
+            num = num//10
+            prev = curr
+        return ListNode() if prev is None else prev
