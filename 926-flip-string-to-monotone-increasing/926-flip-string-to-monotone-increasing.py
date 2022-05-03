@@ -1,16 +1,19 @@
 class Solution:
     def minFlipsMonoIncr(self, s: str) -> int:
-        L = len(s)
-        flips, ones = 0, 0
-        # aim to always flip zeros
-        for i in range(L):
+        n = len(s)
+        left_ones = [0] * (n+1)
+        total_ones = 0
+        for i in range(n):
             if s[i] == '1':
-                ones+=1
+                left_ones[i+1] = left_ones[i] + 1
+                total_ones += 1
             else:
-                flips+=1    
-            flips = min(ones, flips)
-        return flips
-    
-    
-    
-    
+                left_ones[i+1] = left_ones[i]
+        two_way_flips = inf
+        right_zeros = 0
+        for i in range(n-1, -1, -1):
+            if s[i] == '0':
+                right_zeros += 1
+            two_way_flips = min(two_way_flips, right_zeros + left_ones[i])
+        
+        return min(total_ones, n-total_ones, two_way_flips)        
