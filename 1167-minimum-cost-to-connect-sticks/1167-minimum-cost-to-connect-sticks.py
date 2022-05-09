@@ -1,13 +1,11 @@
 class Solution:
     def connectSticks(self, sticks: List[int]) -> int:
-        heap = []
-        for stick in sticks:
-            heapq.heappush(heap, stick)
+        heapq.heapify(sticks)
         total_cost = 0
-        while len(heap)>1:
-            first, second = heapq.heappop(heap), heapq.heappop(heap)
-            final_stick = first+second
-            total_cost += final_stick
-            heapq.heappush(heap, final_stick)
+        while len(sticks) > 1:
+            stick_a = heapq.heappop(sticks)
+            stick_b = heapq.heappop(sticks)
+            new_stick = stick_a + stick_b
+            total_cost += new_stick
+            heapq.heappush(sticks, new_stick)
         return total_cost
-            
