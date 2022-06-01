@@ -54,5 +54,3 @@ class Solution:
             result.append([])
         
         return result
-
-        
