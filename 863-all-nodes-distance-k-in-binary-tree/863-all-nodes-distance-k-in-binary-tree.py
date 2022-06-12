@@ -7,30 +7,36 @@
 
 class Solution:
     def distanceK(self, root: TreeNode, target: TreeNode, k: int) -> List[int]:
-        def map_parent(node, parent=None):
-            if node is None:
+        
+        def annotate_parent(node, parent = None):
+            if not node:
                 return
             node.parent = parent
-            map_parent(node.left, node)
-            map_parent(node.right, node)
+            annotate_parent(node.left, node)
+            annotate_parent(node.right, node)
         
-        def find_k_dist_nodes(node, distance = 0):
-            nonlocal k_distance_nodes, visited
-            
-            if node is None or node in visited:
-                return
-            visited.add(node)
-            if distance == k:
-                k_distance_nodes.append(node.val)
-                return
-            find_k_dist_nodes(node.left, distance+1)
-            find_k_dist_nodes(node.right, distance+1)
-            find_k_dist_nodes(node.parent, distance+1)
-            
-            
-            
-        map_parent(root)
-        k_distance_nodes, visited = [], set()
-        find_k_dist_nodes(target)
-        return k_distance_nodes
+        def find_k_distance_nodes(node, k):
+            considered_nodes = set([node])
+            deque = collections.deque([target])
+            while k:
+                level_len = len(deque)
+                for _ in range(level_len):
+                    curr_node = deque.popleft()
+                    parent, left, right = curr_node.parent, curr_node.left, curr_node.right
+                    
+                    if parent and parent not in considered_nodes:
+                        deque.append(parent)
+                        considered_nodes.add(parent)
+                    if left and left not in considered_nodes:
+                        deque.append(left)
+                        considered_nodes.add(left)
+                    if right and right not in considered_nodes:
+                        deque.append(right)
+                        considered_nodes.add(right)
+                k -= 1
+            return [node.val for node in deque]
+        
+        annotate_parent(root)
+        return find_k_distance_nodes(target, k)
+        
         
