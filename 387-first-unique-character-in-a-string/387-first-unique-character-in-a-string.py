@@ -1,10 +1,14 @@
 class Solution:
     def firstUniqChar(self, s: str) -> int:
-        char_counter = {}
+        char_counter = [0] * 26
+        def get_idx(char):
+            return ord(char) - ord('a')
         for char in s:
-            char_counter[char]  = char_counter.get(char, 0) + 1
+            idx = get_idx(char)
+            char_counter[idx]  += 1
         for i, char in enumerate(s):
-            if char_counter[char] == 1:
+            idx = get_idx(char)
+            if char_counter[idx] == 1:
                 return i
         return -1
             
