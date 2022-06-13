@@ -1,27 +1,23 @@
 class Solution:
     def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         wordDict = set(wordDict)
-        found_list = [None]*len(s)
-        def backtrack(curr_idx):
+        L = len(s)
+        word_idx_status = [None] * L
+        is_found = False
+        def backtrack(curr_idx = 0):
             nonlocal is_found
             if is_found:
                 return
-            if curr_idx == len(s):
+            if curr_idx == L:
                 is_found = True
                 return
-            
-            if found_list[curr_idx] == False:
+            if word_idx_status[curr_idx] == False:
                 return
-            
-            for last_idx in range(curr_idx+1, len(s)+1):
-                
-                if s[curr_idx:last_idx] in wordDict:
-                    backtrack(last_idx)
+            for next_idx in range(curr_idx+1, L+1):
+                if s[curr_idx:next_idx] in wordDict:
+                    backtrack(next_idx)
                 if is_found:
                     break
-            found_list[curr_idx] = is_found
-                
-        
-        is_found = False
-        backtrack(0)
-        return is_found
+            word_idx_status[curr_idx] = is_found
+        backtrack()
+        return is_found 
