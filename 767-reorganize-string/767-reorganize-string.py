@@ -1,27 +1,34 @@
 class Solution:
     def reorganizeString(self, s: str) -> str:
-        heap = []
-        counter_map = {}
+        char_count = {}
         for char in s:
-            counter_map[char] = counter_map.get(char, 0) + 1
-        for char in counter_map:
-            heapq.heappush(heap, (-counter_map[char], char))
-        answer = []
-        while heap:
-            freq, top_ele = heapq.heappop(heap)
-            if heap:
-                second_freq, second_ele = heapq.heappop(heap)
-                answer.append(top_ele)
-                answer.append(second_ele)
-                freq += 1
-                second_freq += 1
-                if second_freq:
-                    heapq.heappush(heap, (second_freq, second_ele))
-                if freq:
-                    heapq.heappush(heap, (freq, top_ele))
+            char_count[char] = char_count.get(char, 0) + 1
+        
+        char_heap = []
+        for char in char_count:
+            heapq.heappush(char_heap, (-char_count[char], char))
+        
+        result = []
+        
+        while char_heap:
+            first_char_freq, first_char = heapq.heappop(char_heap)
+            if char_heap:
+                second_char_freq, second_char = heapq.heappop(char_heap)
+                result.append(first_char)
+                result.append(second_char)
+                first_char_freq += 1
+                second_char_freq += 1
+                
+                if first_char_freq != 0:
+                    heapq.heappush(char_heap, (first_char_freq, first_char))
+                
+                if second_char_freq != 0:
+                    heapq.heappush(char_heap, (second_char_freq, second_char))
+                
             else:
-                if freq < -1:
-                    return ""
+                if -first_char_freq > 1:
+                    return ''
                 else:
-                    answer.append(top_ele)
-        return ''.join(answer)
+                    result.append(first_char)
+        return ''.join(result)
+                
