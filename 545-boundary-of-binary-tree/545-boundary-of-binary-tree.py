@@ -5,48 +5,53 @@
 #         self.left = left
 #         self.right = right
 class Solution:
+    # root flag -> 0
+    # left boundry flag -> 1
+    # right boundry flag -> 2
+    # middle node flag -> 3
+    
     def boundaryOfBinaryTree(self, root: Optional[TreeNode]) -> List[int]:
-        if root is None:
-            return []
-        left_boundry, right_boundry, leaf = [root.val], [], []
-        
+        def is_left_boundry(flag):
+            return flag == 1
+        def is_right_boundry(flag):
+            return flag == 2
+        def is_root(flag):
+            return flag == 0
         def is_leaf(node):
-            return node and node.left == None and node.right == None and node != root
+            return node.left is None and node.right is None
         
-        def fill_left_boundry(node):
-            while node:
-                if is_leaf(node):
-                    break
-                left_boundry.append(node.val)
-                if node.left:
-                    node = node.left
-                else:
-                    node = node.right
+        def left_child_flag(curr, flag):
+            if is_root(flag) or is_left_boundry(flag):
+                return 1
+            elif is_right_boundry(flag) and curr.right is None:
+                return 2
+            return 3
+        def right_child_flag(curr, flag):
+            if is_root(flag) or is_right_boundry(flag):
+                return 2
+            elif is_left_boundry(flag) and curr.left is None:
+                return 1
+            return 3
         
-        def fill_right_boundry(node):
-            while node:
-                if is_leaf(node):
-                    break
-                right_boundry.append(node.val)
-                if node.right:
-                    node = node.right
-                else:
-                    node = node.left
-        
-        def fill_leaf(node):
+        def preorder(node, flag = 0):
+            nonlocal leftmost_nodes, rightmost_nodes, leaf_nodes
+            
             if node is None:
                 return
+            
             if is_leaf(node):
-                leaf.append(node.val)
-            fill_leaf(node.left)
-            fill_leaf(node.right)
-                
-        
-        if root.left:
-            fill_left_boundry(root.left)
-        if root.right:
-            fill_right_boundry(root.right)
-        fill_leaf(root)
-        return left_boundry + leaf + right_boundry[::-1]
-        
+                leaf_nodes.append(node.val)
+                return
+            
+            if is_root(flag) or is_left_boundry(flag):
+                leftmost_nodes.append(node.val)
+            
+            if is_right_boundry(flag):
+                rightmost_nodes.append(node.val)
+            
+            preorder(node.left, left_child_flag(node, flag))
+            preorder(node.right, right_child_flag(node, flag))
+        leftmost_nodes, rightmost_nodes, leaf_nodes = [], [], []
+        preorder(root)
+        return leftmost_nodes + leaf_nodes + rightmost_nodes[::-1]
         
