@@ -7,14 +7,14 @@ class Solution:
         for char in s:
             char_freq_counter[char] = char_freq_counter.get(char, 0) + 1
             max_freq = max(max_freq, char_freq_counter[char])
-        buckets = [[] for _ in range(max_freq)]
+        buckets = [[] for _ in range(max_freq + 1)]
         
         for char in char_freq_counter:
             freq = char_freq_counter[char]
-            buckets[freq - 1].append(char)
+            buckets[freq].append(char)
         frequency_sorted_array = []
-        for i in range(len(buckets) - 1, -1, -1):
+        for i in range(len(buckets) - 1, 0, -1):
             for char in buckets[i]:
-                frequency_sorted_array.append(char * (i + 1))
+                frequency_sorted_array.append(char * (i))
         return ''.join(frequency_sorted_array)
         
