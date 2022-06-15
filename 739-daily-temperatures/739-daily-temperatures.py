@@ -1,11 +1,14 @@
 class Solution:
     def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
-        temperature_stack = []
         n = len(temperatures)
         answer = [0] * n
-        for i in range(n):
-            while temperature_stack and temperatures[temperature_stack[-1]] < temperatures[i]:
-                j = temperature_stack.pop()
-                answer[j] = i - j
-            temperature_stack.append(i)
+        max_temperature = 0
+        for curr_day in range(n-1, -1, -1):
+            if max_temperature <= temperatures[curr_day]:
+                max_temperature = temperatures[curr_day]
+                continue
+            days = 1
+            while temperatures[curr_day + days] <= temperatures[curr_day]:
+                days += answer[curr_day + days]
+            answer[curr_day] = days
         return answer
