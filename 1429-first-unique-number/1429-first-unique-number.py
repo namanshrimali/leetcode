@@ -1,59 +1,33 @@
-class Node:
-    def __init__(self, val=None):
-        self.val = val
-        self.prev, self.next = None, None
-        self.count = 1
-
-class LinkedList:
-    def __init__(self):
-        self.head, self.tail = Node(), Node()
-        self.head.next = self.tail
-        self.tail.prev = self.head
-    
-    def add(self, node):
-        node.next = self.head.next
-        node.prev = self.head
-        self.head.next.prev = node
-        self.head.next = node
-    
-    def remove(self, node):
-        node.prev.next = node.next
-        node.next.prev = node.prev
-    
-    def is_empty(self):
-        return self.head.next == self.tail
-    
-    def first_unique_node(self):
-        if self.is_empty():
-            return None
-        return self.tail.prev
-        
 class FirstUnique:
+
     def __init__(self, nums: List[int]):
-        self.node_map = {}
-        self.ll = LinkedList()
-        for num in nums:
-            if num in self.node_map:
-                self.node_map[num].count += 1
-            else:
-                self.node_map[num] = Node(num)
-        for node in self.node_map:
-            if self.node_map[node].count == 1:
-                self.ll.add(self.node_map[node])
+        self.num_counter = {}
+        self._count_numbers(nums)
+        self.deque = collections.deque([])
+        self._fill_nums(nums)
+    
 
     def showFirstUnique(self) -> int:
-        unique_node = self.ll.first_unique_node()
-        if unique_node == None:
+        while self.deque and self.num_counter[self.deque[0]] > 1:
+            self.deque.popleft()
+        if not self.deque:
             return -1
-        return unique_node.val
+        return self.deque[0]
 
     def add(self, value: int) -> None:
-        if value in self.node_map:
-            if self.node_map[value].count == 1:
-                self.ll.remove(self.node_map[value])
-        else:
-            self.node_map[value] = Node(value)
-            self.ll.add(self.node_map[value])
+        self.num_counter[value] = self.num_counter.get(value, 0) + 1
+        if self.num_counter[value] == 1:
+            self.deque.append(value)
+        
+    def _count_numbers(self, nums):
+        for num in nums:
+            self.num_counter[num] = self.num_counter.get(num, 0) + 1
+    def _fill_nums(self, nums):
+        for num in nums:
+            if self.num_counter[num] > 1:
+                continue
+            self.deque.append(num)
+        
         
 
 
