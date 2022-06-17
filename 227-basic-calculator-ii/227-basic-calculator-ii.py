@@ -1,39 +1,39 @@
 class Solution:
     def calculate(self, s: str) -> int:
-            
-        stack, last_sign = [], '+'
-        i, L = 0, len(s)
+        def get_next_number(idx):
+            num = 0
+            while idx < len(s) and s[idx] not in '+-*/':
+                if s[idx].isdigit():
+                    num = num * 10 + int(s[idx])
+                idx += 1
+            return num, idx - 1
         
-        def get_number(i, last_sign):
-            num = [last_sign]
-            while i < L and s[i] not in '+-*/':
-                if s[i].isdigit():
-                    num.append(s[i])
-                i+=1
-            return int(''.join(num)), i-1
-        
-        while i<L:
-            if s[i].isdigit():
-                next_num, i = get_number(i, last_sign)
-                stack.append(next_num)
-            else:
-                if s[i] == '-':
-                    last_sign = '-'
-                elif s[i] == '+':
-                    last_sign = '+'
+        expression_stack = []
+        last_sign = 1
+        i = 0
+        while i < len(s):
+            if s[i] in '+-*/':
+                if s[i] == '+':
+                    last_sign = 1
+                elif s[i] == '-':
+                    last_sign = -1
                 elif s[i] == '*':
-                    last_sign = '+'
-                    next_num, i = get_number(i+1, last_sign)
-                    stack[-1]*=next_num
-                elif s[i] == '/':
-                    last_sign = '+'
-                    next_num, i = get_number(i+1, last_sign)
-                    if stack[-1] < 0:
-                        stack[-1] = -(-stack[-1]//next_num)
+                    next_num, i = get_next_number(i+1)
+                    expression_stack[-1] *= last_sign * next_num
+                    last_sign = 1
+                else:
+                    next_num, i = get_next_number(i+1)
+                    if expression_stack[-1] < 0:
+                        new_value = -((-expression_stack[-1])//next_num)
                     else:
-                        stack[-1]//=next_num
-            i+=1
-        return sum(stack)
-            
-                        
+                        new_value = expression_stack[-1]//next_num
+                    expression_stack[-1] = new_value * last_sign
+                    last_sign = 1
                     
+            elif s[i].isdigit():
+                next_num, i = get_next_number(i)
+                expression_stack.append(next_num * last_sign)
+                last_sign = 1
+            i += 1
+        return sum(expression_stack)
+        
