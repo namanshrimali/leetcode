@@ -1,5 +1,7 @@
 class Solution:
     def letterCombinations(self, digits: str) -> List[str]:
+        if len(digits) == 0:
+            return []
         digit_to_letter = {
             '2': ['a', 'b', 'c'],
             '3': ['d', 'e', 'f'],
@@ -11,14 +13,12 @@ class Solution:
             '9': ['w', 'x', 'y', 'z']
         }
         combinations = []
-        def dfs(combination = [], n=0):
+        def get_combinations(combination = [], idx = 0):
             nonlocal combinations
-            if n == len(digits):
-                if combination:
-                    combinations.append(''.join(combination))
+            if idx == len(digits):
+                combinations.append(''.join(combination))
                 return
-            curr_digit = digits[n]
-            for letter in digit_to_letter[curr_digit]:
-                dfs(combination + [letter], n+1)
-        dfs()
+            for letter in digit_to_letter[digits[idx]]:
+                get_combinations(combination + [letter], idx + 1)
+        get_combinations()
         return combinations
