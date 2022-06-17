@@ -7,21 +7,21 @@
 
 class Solution:
     def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+        def find_common_ancestor(node):
+            nonlocal common_ancestor
+            if node is None or common_ancestor is not None:
+                return False
+            is_node_wanted = node == p or node == q
+            is_left_child_wanted = find_common_ancestor(node.left)
+            is_right_child_wanted = find_common_ancestor(node.right)
+            
+            is_common_ancestor_found = (is_node_wanted and (is_left_child_wanted or is_right_child_wanted)) or (is_left_child_wanted and is_right_child_wanted)
+            
+            if is_common_ancestor_found:
+                common_ancestor = node
+            
+            return is_node_wanted or is_left_child_wanted or is_right_child_wanted
+        common_ancestor = None
+        find_common_ancestor(root)
+        return common_ancestor
         
-        def map_parent(node, parent = None):
-            if node is None:
-                return
-            node.parent = parent
-            map_parent(node.left, node)
-            map_parent(node.right, node)
-        
-        map_parent(root)
-        p_ancestors = set()
-        while p:
-            p_ancestors.add(p)
-            p = p.parent
-        while q:
-            if q in p_ancestors:
-                break
-            q = q.parent
-        return q
