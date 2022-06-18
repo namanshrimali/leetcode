@@ -1,55 +1,32 @@
-# class DisjointSet:
-#     def __init__(self, total_nodes):
-#         self.parent = [i for i in range(total_nodes)]
-#         self.rank = [0 for _ in range(total_nodes)]
+class DisjointSet:
+    def __init__(self, n):
+        self.parents = [i for i in range(n)]
+        self.connected_count = [1]*n
     
-#     def union(self, node1, node2):
-#         root1, root2 = self.find(node1), self.find(node2)
-#         if root1 == root2:        # no union needed, already in same set
-#             return
-#         if self.rank[root1]>=self.rank[root2]:
-#             self.parent[root2] = root1
-#             self.rank[root1]+=self.rank[root2]
-#         else:
-#             self.parent[root1] = root2
-#             self.rank[root2]+=self.rank[root1]    
+    def union(self, a, b):
+        parent_a, parent_b = self.get_parent(a), self.get_parent(b)
+        if parent_a == parent_b:
+            return
+        if self.connected_count[parent_a] > self.connected_count[parent_b]:
+            self.parents[parent_b] = parent_a
+            self.connected_count[parent_a] += self.connected_count[parent_b]
+        else:
+            self.parents[parent_a] = parent_b
+            self.connected_count[parent_b] += self.connected_count[parent_a]
+            
     
-#     def find(self, node):
-#         while self.parent[node] != node:
-#             node = self.parent[self.parent[node]]
-#         return node
-
-# class Solution:
-#     def countComponents(self, n: int, edges: List[List[int]]) -> int:
-#         disjoint_set = DisjointSet(n)
+    def get_parent(self, a):
+        while a != self.parents[a]:
+            self.parents[a] = self.parents[self.parents[a]]
+            a = self.parents[a]
+        return a
         
-#         for node1, node2 in edges:
-#             disjoint_set.union(node1, node2)
-#         parent_set = set()
-#         for i in range(n):
-#             parent_set.add(disjoint_set.find(i))
-#         return len(parent_set)
-
-
 class Solution:
     def countComponents(self, n: int, edges: List[List[int]]) -> int:
-        node_map = collections.defaultdict(set)
-        for node1, node2 in edges:
-            node_map[node1].add(node2)
-            node_map[node2].add(node1)
-        
-        visited = set()
-        
-        def dfs(node):
-            if node in visited:
-                return
-            visited.add(node)
-            for connected in node_map[node]:
-                dfs(connected)
-        
-        total = 0
+        d_set = DisjointSet(n)
+        for a, b in edges:
+            d_set.union(a, b)
+        uniq_graphs = set()
         for i in range(n):
-            if i not in visited:
-                total+=1
-                dfs(i)
-        return total
+            uniq_graphs.add(d_set.get_parent(i))
+        return len(uniq_graphs)
