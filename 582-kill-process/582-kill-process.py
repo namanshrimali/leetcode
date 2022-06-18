@@ -1,23 +1,36 @@
+class Process:
+    def __init__(self, pid, parent = None):
+        self.id = pid
+        self.parent = parent
+        self.children = []
+    
+    def add_child(self, child):
+        self.children.append(child)
+    
+    def set_parent(self, parent):
+        self.parent = parent
+    
+    def kill(self):
+        killed_ids = [self.id]
+        for child in self.children:
+            killed_ids += child.kill()
+        return killed_ids
+    
 class Solution:
     def killProcess(self, pid: List[int], ppid: List[int], kill: int) -> List[int]:
-        process_tree = {}
-        n = len(pid)
-        for i in range(n):
-            if pid[i] not in process_tree:
-                process_tree[pid[i]] = set()
-            if ppid[i] !=0:
-                if ppid[i] not in process_tree:
-                    process_tree[ppid[i]] = set()
-                process_tree[ppid[i]].add(pid[i])
-
-        deque = collections.deque([kill])
-        killed_processes = set()
-        while deque:
-            process = deque.popleft()
-            killed_processes.add(process)
-            
-            for child in process_tree[process]:
-                if child not in killed_processes:
-                    deque.append(child)
+        total_processes = len(pid)
+        process_map = {}
         
-        return killed_processes
+        for i in range(total_processes):
+            if pid[i] not in process_map:
+                process_map[pid[i]] = Process(pid[i])
+            if ppid[i] not in process_map:
+                process_map[ppid[i]] = Process(ppid[i])
+            child = process_map[pid[i]]
+            parent = process_map[ppid[i]]
+            
+            if parent.id != 0:
+                child.set_parent(parent)
+                parent.add_child(child)
+        
+        return process_map[kill].kill()
