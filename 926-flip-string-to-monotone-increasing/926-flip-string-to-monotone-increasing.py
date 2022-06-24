@@ -1,19 +1,30 @@
 class Solution:
     def minFlipsMonoIncr(self, s: str) -> int:
+        s = list(s)
         n = len(s)
-        left_ones = [0] * (n+1)
-        total_ones = 0
-        for i in range(n):
-            if s[i] == '1':
-                left_ones[i+1] = left_ones[i] + 1
-                total_ones += 1
+        ones_on_left = [0] * (n)
+        total_ones = 1 if s[0] == '1' else 0 
+        
+        for i in range(1, n):
+            if s[i-1] == '1':
+                ones_on_left[i] = ones_on_left[i-1] + 1
             else:
-                left_ones[i+1] = left_ones[i]
-        two_way_flips = inf
-        right_zeros = 0
+                ones_on_left[i] = ones_on_left[i-1]
+            if s[i] == '1':
+                total_ones += 1
+        
+        zeroes_on_right = [0] * (n+1)
+        
         for i in range(n-1, -1, -1):
             if s[i] == '0':
-                right_zeros += 1
-            two_way_flips = min(two_way_flips, right_zeros + left_ones[i])
+                zeroes_on_right[i] = zeroes_on_right[i+1] + 1
+            else:
+                zeroes_on_right[i] = zeroes_on_right[i+1]
         
-        return min(total_ones, n-total_ones, two_way_flips)        
+        minimal_zero_one_flips = min(total_ones, n-total_ones)
+
+        for i in range(n):
+            minimal_zero_one_flips = min(minimal_zero_one_flips, ones_on_left[i] + zeroes_on_right[i])
+        return minimal_zero_one_flips
+            
+        
