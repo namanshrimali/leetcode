@@ -3,16 +3,18 @@ class Solution:
         MAX = 2**31-1
         MIN = -2**31
         
-        rev = 0
-        sign = 1 if x>0 else -1
+        result = 0
+        sign = 1 if x > 0 else -1
         
-        while x!=0:
-            rem = sign*((sign*x)%10)
-            if rev > MAX//10 or (rev == MAX//10 and rem > 7):
+        while x != 0:
+            remainder = sign * ((sign*x) % 10)
+            
+            if result > MAX//10 or (result == MAX//10 and remainder > 7):
                 return 0
-            if rev < -(-MIN//10) or (rev == -(-MIN//10) and rem < -8):
+            if result < -(-MIN//10) or (result == -(-MIN//10) and remainder < -8):
                 return 0
-            rev = rev * 10 + rem
-            x = sign*((sign*x)//10)
-        return rev
-        
+            
+            result = result * 10 + remainder
+            x = sign * ((sign*x)//10)
+            
+        return result
