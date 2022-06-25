@@ -8,12 +8,10 @@ class Solution:
     def hasCycle(self, head: Optional[ListNode]) -> bool:
         if head is None or head.next is None:
             return False
-        tortoise, hare = head, head.next
-        
+        hare, tortoise = head.next, head 
         while hare and hare.next:
             if tortoise == hare:
                 return True
-            tortoise = tortoise.next
             hare = hare.next.next
+            tortoise = tortoise.next
         return False
-        
