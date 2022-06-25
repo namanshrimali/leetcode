@@ -8,20 +8,20 @@ class Solution:
         if head is None or head.next is None:
             return head
         
+        def swap_adjacent(prev_node, curr_node):
+            next_node = curr_node.next
+            if next_node:
+                curr_node.next = next_node.next
+                next_node.next = curr_node
+                prev_node.next = next_node
+        
         dummy_head = ListNode()
-        prev, curr, adj = dummy_head, head, head.next
+        dummy_head.next = head
+        last_node = dummy_head
         
-        def swap_curr_and_adj(prev, curr, adj):
-            curr.next = adj.next
-            adj.next = curr
-            prev.next = adj
-        
-        while adj is not None:
-            swap_curr_and_adj(prev, curr, adj)
-            prev = curr
-            curr = curr.next
-            adj = curr.next if curr is not None else None
-            
+        while head:
+            swap_adjacent(last_node, head)
+            last_node = head
+            head = head.next
         return dummy_head.next
-            
         
