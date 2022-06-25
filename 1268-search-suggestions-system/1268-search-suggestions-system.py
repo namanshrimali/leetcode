@@ -1,56 +1,47 @@
-def get_char_idx(char):
-    return ord(char)-ord('a')
-
 def get_char_from_idx(idx):
-    return chr(idx + ord('a'))
+    return chr(ord('a') + idx)
+
+def get_idx_of(char):
+    return ord(char) - ord('a')
 
 class TrieNode:
     def __init__(self):
         self.children = [None]*26
         self.is_word = False
-
-    def add_word(self, word):
-        curr_node = self
-        for char in word:
-            idx = get_char_idx(char)
-            if curr_node.children[idx] is None:
-                curr_node.children[idx] = TrieNode()
-            curr_node = curr_node.children[idx]
-        curr_node.is_word = True
-    
-    def get_top_three_words(self, word_array, top_three_words = []):
+        
+    def get_top_three_words(self, word_prefix, top_three_words):
         if len(top_three_words) == 3:
             return top_three_words
         if self.is_word:
-            top_three_words.append(''.join(word_array))
+            top_three_words.append(''.join(word_prefix))
             
         for i in range(len(self.children)):
-            if self.children[i] is not None:
-                top_three_words = self.children[i].get_top_three_words(word_array + [get_char_from_idx(i)], top_three_words)
+            child = self.children[i]
+            if child is not None:
+                top_three_words = child.get_top_three_words(word_prefix + [get_char_from_idx(i)], top_three_words)
         return top_three_words
-                    
-            
-            
-            
+        
+    def add_product(self, product):
+        curr_node = self
+        for letter in product:
+            letter_idx = get_idx_of(letter)
+            if curr_node.children[letter_idx] == None:
+                curr_node.children[letter_idx] = TrieNode()
+            curr_node = curr_node.children[letter_idx]
+        curr_node.is_word = True
+        
+
 class Solution:
     def suggestedProducts(self, products: List[str], searchWord: str) -> List[List[str]]:
         root = TrieNode()
-        
         for product in products:
-            root.add_word(product)
-        
-        result = []
+            root.add_product(product)
         curr_node = root
-        i = 0
-        while i < len(searchWord):
-            idx = get_char_idx(searchWord[i])
-            if curr_node.children[idx] is None:
-                break
-            curr_node = curr_node.children[idx]
-            result.append(curr_node.get_top_three_words([searchWord[:i+1]], []))
-            i+=1
+        answer = []
+        for i in range(len(searchWord)):  
+            curr_node = curr_node.children[get_idx_of(searchWord[i])]
+            if curr_node is None:
+                curr_node = TrieNode()
+            answer.append(curr_node.get_top_three_words([searchWord[:i+1]], []))
             
-        for j in range(i, len(searchWord)):
-            result.append([])
-        
-        return result
+        return answer
