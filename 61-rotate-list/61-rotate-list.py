@@ -31,7 +31,3 @@ class Solution:
         left.next = None
         
         return head
-        
-        
-        
-        
