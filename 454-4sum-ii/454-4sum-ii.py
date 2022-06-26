@@ -14,3 +14,4 @@ class Solution:
                 total += sum_count.get(-_sum, 0)
         
         return total
+    
