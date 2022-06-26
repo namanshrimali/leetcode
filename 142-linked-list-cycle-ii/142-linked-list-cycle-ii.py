@@ -14,10 +14,9 @@ class Solution:
         if head is None or head.next is None:
             return
         
-        
         def get_intersecting_node():
             tortoise, hare = head, head
-        
+            
             while hare and hare.next:
                 tortoise = tortoise.next
                 hare = hare.next.next
