@@ -11,7 +11,7 @@ class Solution:
                 return True
             if not coordinates_are_valid(x, y) or board[x][y] != suffix[0]:
                 return False
-            if_found = False
+
             board[x][y] = '#'
             for x_dir, y_dir in directions:
                 is_found = find_word(x+x_dir, y+y_dir, suffix[1:])
