@@ -3,7 +3,7 @@ class DisjointSet:
         self.parents = [i for i in range(total_points)]
         self.weights = [1] * total_points
         self.total_points = total_points
-    
+
     def union(self, city_a, city_b):
         parent_a, parent_b = self.find_parent(city_a), self.find_parent(city_b)
         if parent_a == parent_b:
@@ -23,7 +23,7 @@ class DisjointSet:
     
     def are_connected(self, city_a, city_b):
         return self.find_parent(city_a) == self.find_parent(city_b)
-    
+
 class Solution:
     def findCircleNum(self, isConnected: List[List[int]]) -> int:
         n = len(isConnected)
